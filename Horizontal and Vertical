@@ -4,13 +4,13 @@ using System.Collections;
 using System.Security.Cryptography;
 using System.Threading;
 using UnityEngine;
-
+/*===========================================New Scprit=================================================*/
 public class ThirdPersonMovement : MonoBehaviour
 {
     public CharacterController controller;
     public Transform cam;
     public Animator animator;
-    //float animIDSpeed = Animator.StringToHash("Idle Walk Run Blend");
+
     public float speed;
     public float gravity = -9.81f;
     public float jumpHeight = 3;
@@ -23,19 +23,23 @@ public class ThirdPersonMovement : MonoBehaviour
     float turnSmoothVelocity;
     public float turnSmoothTime = 0.1f;
 
-        private float lastAttackTime;
-        private float continuousTime;
-        public int HitCount = 0;
-        private bool isAttack = false;
+    private float lastAttackTime;
+    private float continuousTime;
+    public int HitCount = 0;
+    private bool isAttack = false;
 
-    void Start ()
+    void Start()
     {
         animator = GetComponent<Animator>();
     }
 
-    private void FixedUpdate()
+    public void FixedUpdate()
     {
         Attack();
+        Move();
+    }
+    public void Move()
+    {
         //攻擊cd時間
         lastAttackTime -= Time.deltaTime;
         //連擊倒數時間
@@ -78,7 +82,7 @@ public class ThirdPersonMovement : MonoBehaviour
 
         Cursor.lockState = CursorLockMode.Locked;
 
-        if (direction.magnitude >= 0.1f)
+        if (direction.magnitude > 0.1f)
         {
             if (Input.GetKey(KeyCode.LeftShift) && (Input.GetAxis("Horizontal") > 0 || Input.GetAxis("Vertical") > 0 || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.S)))
             {
@@ -90,8 +94,6 @@ public class ThirdPersonMovement : MonoBehaviour
                 animator.SetFloat("Speed", 2f);
                 speed = 2f;
             }
-
-            //animator.SetFloat("Speed",0f);
             float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg + cam.eulerAngles.y;
             float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, turnSmoothTime);
             transform.rotation = Quaternion.Euler(0f, angle, 0f);
@@ -104,48 +106,43 @@ public class ThirdPersonMovement : MonoBehaviour
             animator.SetFloat("Speed", 0f);
         }
     }
-    private void Attack()
+    public void Attack()
     {
         //var mouse = Mouse.current;
-            //跳躍中不能攻擊，左鍵攻擊，攻擊cd=0
-            if(Input.GetMouseButton(0) && lastAttackTime < 0)
-            {
-                HitCount++;
-                switch(HitCount)
-                {
-                    case 1:
-                        animator.SetTrigger("atk1");
-                        break;
-                    case 2:
-                        animator.SetTrigger("atk2");
-                        break;
-                    case 3:
-                        animator.SetTrigger("atk3");
-                        break;
-                    case 4:
-                        animator.SetTrigger("atk4");
-                        HitCount = 0;
-                        break;
-                }
 
-                isAttack = true;
-                speed = 0f;
-                //SprintSpeed = 0f;
-                //_animator.SetTrigger("Atk");
-                lastAttackTime = 0.5f;
-                continuousTime = 1.0f;
-                //_input.jump = false;
-                //_animator.SetBool(_animIDJump, false);
-            }
-            if(isAttack = true && lastAttackTime < 0)
+        //跳躍中不能攻擊，左鍵攻擊，攻擊cd=0
+        if (Input.GetMouseButton(0) && lastAttackTime < 0)
+        {
+            HitCount++;
+            switch (HitCount)
             {
-                isAttack = false;
-                //speed = 6f;
-                //SprintSpeed = 5.335f;
+                case 1:
+                    animator.SetTrigger("atk1");
+                    break;
+                case 2:
+                    animator.SetTrigger("atk2");
+                    break;
+                case 3:
+                    animator.SetTrigger("atk3");
+                    break;
+                case 4:
+                    animator.SetTrigger("atk4");
+                    HitCount = 0;
+                    break;
             }
-            if(continuousTime < 0)
-            {
-                HitCount = 0;
-            }
+
+            isAttack = true;
+            lastAttackTime = 0.5f;
+            continuousTime = 1.0f;
+            speed = 0f;
+        }
+        if (isAttack = true && lastAttackTime < 0)
+        {
+            isAttack = false;
+        }
+        if (continuousTime < 0)
+        {
+            HitCount = 0;
+        }
     }
 }
