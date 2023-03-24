@@ -33,12 +33,6 @@ public class ThirdPersonMovement : MonoBehaviour
         animator = GetComponent<Animator>();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
     private void FixedUpdate()
     {
         Attack();
@@ -69,14 +63,10 @@ public class ThirdPersonMovement : MonoBehaviour
             animator.SetBool("Grounded", false);
         }
 
-        if (Input.GetButtonDown("Jump") && isGrounded)
+        if (Input.GetKey(KeyCode.Space) && isGrounded)
         {
             velocity.y = Mathf.Sqrt(jumpHeight * -2 * gravity);
-            animator.SetBool("Jump", true);
-        }
-        else
-        {
-            animator.SetBool("Jump", false);
+            animator.SetTrigger("Jump");
         }
         //gravity
         velocity.y += gravity * Time.deltaTime;
@@ -90,7 +80,7 @@ public class ThirdPersonMovement : MonoBehaviour
 
         if (direction.magnitude >= 0.1f)
         {
-            if (Input.GetKey(KeyCode.LeftShift) && (Input.GetAxis("Horizontal") > 0 || Input.GetAxis("Vertical") > 0))
+            if (Input.GetKey(KeyCode.LeftShift) && (Input.GetAxis("Horizontal") > 0 || Input.GetAxis("Vertical") > 0 || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.S)))
             {
                 animator.SetFloat("Speed", 6f);
                 speed = 6f;
