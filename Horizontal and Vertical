@@ -1,44 +1,4 @@
-using System;
-using System.Collections;
-
-using System.Security.Cryptography;
-using System.Threading;
-using UnityEngine;
-/*===========================================New Scprit=================================================*/
-public class ThirdPersonMovement : MonoBehaviour
-{
-    public CharacterController controller;
-    public Transform cam;
-    public Animator animator;
-
-    public float speed;
-    public float gravity = -9.81f;
-    public float jumpHeight = 3;
-    Vector3 velocity;
-    bool isGrounded;
-    public Transform groundCheck;
-    public float groundDistance = 0.4f;
-    public LayerMask groundMask;
-
-    float turnSmoothVelocity;
-    public float turnSmoothTime = 0.1f;
-
-    private float lastAttackTime;
-    private float continuousTime;
-    public int HitCount = 0;
-    private bool isAttack = false;
-
-    void Start()
-    {
-        animator = GetComponent<Animator>();
-    }
-
-    public void FixedUpdate()
-    {
-        Attack();
-        Move();
-    }
-    public void Move()
+public void Move()
     {
         //攻擊cd時間
         lastAttackTime -= Time.deltaTime;
@@ -80,7 +40,6 @@ public class ThirdPersonMovement : MonoBehaviour
         float vertical = Input.GetAxisRaw("Vertical");
         Vector3 direction = new Vector3(horizontal, 0f, vertical).normalized;
 
-        Cursor.lockState = CursorLockMode.Locked;
 
         if (direction.magnitude > 0.1f)
         {
@@ -105,6 +64,9 @@ public class ThirdPersonMovement : MonoBehaviour
         {
             animator.SetFloat("Speed", 0f);
         }
+
+        Cursor.lockState = CursorLockMode.Locked;
+
     }
     public void Attack()
     {
@@ -145,4 +107,3 @@ public class ThirdPersonMovement : MonoBehaviour
             HitCount = 0;
         }
     }
-}
